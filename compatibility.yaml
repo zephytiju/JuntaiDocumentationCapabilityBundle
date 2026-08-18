@@ -1,0 +1,12 @@
+schemaVersion: capability.juntai.io/compatibility/v1
+packageVersion: 1.0.0
+schemaMajor: 1
+fuseApi:
+  distribution: juntai-fuse-api
+  version: 2.0.0
+  descriptorVersion: juntai.fuse/mcp-descriptor/v1
+  runtimeProfile: juntai.fuse.profile.mcp/v1
+artifactSdk:
+  distribution: juntai-artifact-client
+  version: 1.0.2
+layoutProfile: juntai.documentation.standard/v1

@@ -1,0 +1,131 @@
+apiVersion: capability.juntai.io/v1
+kind: AgentCapabilityBundle
+metadata:
+  bundleId: fixture.generic-capability
+  version: 1.0.0
+  ownerKey: shared-foundation
+  producerBuildId: fixture-build-1
+contracts:
+  openapi:
+    path: contracts/openapi.json
+    digest: sha256:05f5e58ec3f6c9ce994e496c18d9355b6dda563875a9f0719f527e8f65f0a2c7
+  mcp:
+    path: contracts/mcp-descriptor.json
+    digest: sha256:6225f077ddfe1b06033cc600b38186a6d5aa1462ec1409f67773a829dd1aef17
+    descriptorDigest: sha256:6225f077ddfe1b06033cc600b38186a6d5aa1462ec1409f67773a829dd1aef17
+  schemas:
+    - schemaId: fixture.message.v1
+      path: contracts/message.schema.json
+      digest: sha256:b7c3045d93241f2c9a71d83838e466295e6586fc195d847845e9d99948f217ab
+sources:
+  root: .
+  units:
+    - unitId: fixture.overview
+      kind: overview
+      audiences: [human, agent, developer]
+      locale: en
+      title: Generic capability fixture
+      sourcePath: guides/overview.md
+      order: 0
+      lifecycle: release
+      schemaReferences:
+        - schemaId: fixture.message.v1
+          digest: sha256:b7c3045d93241f2c9a71d83838e466295e6586fc195d847845e9d99948f217ab
+      mcp:
+        resourceId: fixture.overview
+        mimeType: text/markdown
+    - unitId: fixture.safety.approval
+      kind: safety
+      audiences: [human, agent, developer]
+      locale: en
+      title: Explicit fixture approval
+      sourcePath: safety/approval.md
+      parentUnitId: fixture.overview
+      order: 1
+      lifecycle: release
+      mcp:
+        resourceId: fixture.safety.approval
+        mimeType: text/markdown
+    - unitId: fixture.workflow.echo
+      kind: workflow
+      audiences: [human, agent, developer]
+      locale: en
+      title: Invoke the generic fixture
+      sourcePath: workflows/echo.md
+      parentUnitId: fixture.overview
+      order: 2
+      lifecycle: release
+      toolReferences:
+        - &fixtureTool
+          toolId: fixture.echo
+          mcpDescriptorDigest: sha256:6225f077ddfe1b06033cc600b38186a6d5aa1462ec1409f67773a829dd1aef17
+          signatureSha256: sha256:fb106553607f0a534a5c55b47edee5417593c9abb3a2b7bff2abcc9214746f32
+          inputSchemaDigest: sha256:642e8c6df45bb35d22a57a5f678edafe146789bf116928be5482e8e144ddc911
+          outputSchemaDigest: sha256:2d688660b58fbd6245e38ece2feadacb06b03c8ef8addc8b2c0a706a13a5e178
+          approvalPolicyUnitId: fixture.safety.approval
+      mcp:
+        resourceId: fixture.workflow.echo
+        promptId: fixture.workflow.echo
+        userInvoked: true
+        mimeType: text/markdown
+    - unitId: fixture.example.echo
+      kind: example
+      audiences: [human, agent, developer]
+      locale: en
+      title: Generic echo example
+      sourcePath: examples/echo.json
+      parentUnitId: fixture.workflow.echo
+      order: 3
+      lifecycle: release
+      toolReferences:
+        - *fixtureTool
+      mcp:
+        resourceId: fixture.example.echo
+        mimeType: application/json
+compatibility:
+  platform: ">=4.0 <5.0"
+  lifecycle: release
+  taskClasses: [fixture.echo]
+  frameworks:
+    mcp: ">=2.0 <3.0"
+publication:
+  visibility: public
+  namespace: platform
+  name: generic-capability-fixture
+  kind: documentation.capability
+  routeKey: platform.documentation
+provenance:
+  sourceRepository: https://github.com/zephytiju/JuntaiDocumentationCapabilityBundle
+  sourceCommit: "1111111111111111111111111111111111111111"
+  packagerVersion: 1.0.0
+  rendererVersions:
+    human: 1.0.0
+    mcp: 1.0.0
+  builtAt: "2026-08-18T00:00:00Z"
+  approvalEvidenceRef:
+    schemaVersion: "1"
+    evidenceId: fixture-release-approval
+    ownerDomain: shared-foundation
+    evidenceKind: release-approval
+    target:
+      kind: artifact
+      artifactRef:
+        artifact_id: fixture-artifact
+        version_id: fixture-version
+        manifest_digest: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    read:
+      protocol: openapi
+      serviceId: fixture-service
+      operationId: get_fixture_approval
+      openapiDigest: sha256:05f5e58ec3f6c9ce994e496c18d9355b6dda563875a9f0719f527e8f65f0a2c7
+    selectors:
+      - selectorId: buildId
+        valueType: string
+        value: fixture-build-1
+    observedAt: "2026-08-18T00:00:00Z"
+    access:
+      authorizationPolicyId: fixture.public-release-read
+      delegatedCallerRequired: true
+      requiredScopes: [fixture.read]
+      allowedPurposes: [release-verification]
+      dataClassification: public

@@ -1,0 +1,13 @@
+.DS_Store
+.pytest_cache/
+.ruff_cache/
+.venv/
+__pycache__/
+*.egg-info/
+build/
+dist/
+!packages/console-viewer/dist/
+!packages/console-viewer/dist/**
+coverage.xml
+capability.lock
+packages/console-viewer/node_modules/

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.juntai.io/capability/catalog-index/v1.schema.json",
+  "title": "DocumentationCatalogIndex v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "records", "indexDigest", "signature"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "summary", "ownerKey", "visibility", "lifecycle", "locales", "taskClasses", "compatibility", "routeKey", "pin"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "summary": {"type": "string", "maxLength": 500},
+          "ownerKey": {"type": "string"},
+          "visibility": {"enum": ["public", "internal", "tenant", "restricted"]},
+          "lifecycle": {"enum": ["preview", "release", "deprecated", "revoked"]},
+          "deprecatedAt": {"type": "string", "format": "date-time"},
+          "revokedAt": {"type": "string", "format": "date-time"},
+          "locales": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+          "taskClasses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+          "compatibility": {"type": "object"},
+          "routeKey": {"type": "string"},
+          "pin": {"$ref": "#/$defs/pin"},
+          "replacement": {"$ref": "#/$defs/pin"}
+        }
+      }
+    },
+    "indexDigest": {"$ref": "#/$defs/digest"},
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "keyId", "signedDigest", "value"],
+      "properties": {
+        "algorithm": {"type": "string"},
+        "keyId": {"type": "string"},
+        "signedDigest": {"$ref": "#/$defs/digest"},
+        "value": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "pin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coordinate", "producerBuildId", "openapiDigest", "mcpDescriptorDigest", "contentGraphDigest", "humanProjectionDigest", "mcpProjectionDigest"],
+      "properties": {
+        "coordinate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ownerKey", "bundleId", "version", "artifactRef", "digest", "schemaMajor"],
+          "properties": {
+            "ownerKey": {"type": "string"},
+            "bundleId": {"type": "string"},
+            "version": {"type": "string"},
+            "artifactRef": {"type": "object", "minProperties": 3},
+            "digest": {"$ref": "#/$defs/digest"},
+            "schemaMajor": {"const": 1}
+          }
+        },
+        "producerBuildId": {"type": "string"},
+        "openapiDigest": {"$ref": "#/$defs/digest"},
+        "mcpDescriptorDigest": {"$ref": "#/$defs/digest"},
+        "contentGraphDigest": {"$ref": "#/$defs/digest"},
+        "humanProjectionDigest": {"$ref": "#/$defs/digest"},
+        "mcpProjectionDigest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

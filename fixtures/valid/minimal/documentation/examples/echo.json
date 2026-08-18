@@ -1,0 +1,14 @@
+{
+  "input": {
+    "message": "example"
+  },
+  "expectedToolCalls": [
+    {
+      "toolId": "fixture.echo",
+      "arguments": {
+        "message": "example"
+      }
+    }
+  ],
+  "expectedOutcome": "The generic result is returned."
+}
