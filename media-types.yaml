@@ -1,0 +1,8 @@
+schemaVersion: capability.juntai.io/media-types/v1
+artifacts:
+  canonicalBundle: application/vnd.juntai.capability-bundle.v1+tar
+  agentCapabilityBundle: application/vnd.juntai.agent-capability-bundle.v1+tar
+  humanProjection: application/vnd.juntai.documentation-human.v1+tar
+  mcpProjection: application/vnd.juntai.documentation-mcp.v1+json
+  catalogIndex: application/vnd.juntai.documentation-catalog.v1+json
+  provenance: application/vnd.juntai.capability-provenance.v1+json

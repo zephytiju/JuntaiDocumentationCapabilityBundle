@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.juntai.io/capability/tool-outcome/v1.schema.json",
+  "title": "ToolOutcome v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "tool", "mcpDescriptorDigest", "invocationId", "traceId", "taskId", "observedStatus", "startedAt", "terminalAt", "attempt", "returnedEvidencePointers"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "tool": {"$ref": "https://schemas.juntai.io/capability/evidence-pointer/v1.schema.json#/$defs/toolRef"},
+    "mcpDescriptorDigest": {"$ref": "#/$defs/digest"},
+    "invocationId": {"type": "string"},
+    "traceId": {"type": "string"},
+    "taskId": {"type": "string"},
+    "correlationId": {"type": "string"},
+    "causationId": {"type": "string"},
+    "observedStatus": {"enum": ["succeeded", "partial", "failed", "cancelled", "deadline_exceeded", "rejected"]},
+    "stableError": {
+      "type": "object", "additionalProperties": false, "required": ["code", "category", "retryable"],
+      "properties": {"code": {"type": "string"}, "category": {"enum": ["authorization", "validation", "not_found", "conflict", "deadline", "cancelled", "dependency", "internal"]}, "retryable": {"type": "boolean"}}
+    },
+    "result": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["kind", "digest", "mediaType", "byteLength"], "properties": {"kind": {"const": "digest"}, "digest": {"$ref": "#/$defs/digest"}, "mediaType": {"type": "string"}, "byteLength": {"type": "integer", "minimum": 0}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "evidence"], "properties": {"kind": {"const": "authorized-reference"}, "evidence": {"$ref": "https://schemas.juntai.io/capability/evidence-pointer/v1.schema.json"}}}
+      ]
+    },
+    "startedAt": {"type": "string", "format": "date-time"},
+    "terminalAt": {"type": "string", "format": "date-time"},
+    "attempt": {"type": "integer", "minimum": 1},
+    "idempotency": {"type": "object", "additionalProperties": false, "required": ["keyDigest", "disposition"], "properties": {"keyDigest": {"$ref": "#/$defs/digest"}, "disposition": {"enum": ["first-attempt", "replay", "deduplicated"]}}},
+    "returnedEvidencePointers": {"type": "array", "items": {"$ref": "https://schemas.juntai.io/capability/evidence-pointer/v1.schema.json"}}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

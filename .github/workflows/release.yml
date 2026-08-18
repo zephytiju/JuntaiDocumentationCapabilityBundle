@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify exact release version
+        run: |
+          test "$GITHUB_REF_NAME" = v1.0.0
+          python -c 'import tomllib; assert tomllib.load(open("pyproject.toml", "rb"))["project"]["version"] == "1.0.0"'
+      - name: Test and build
+        run: |
+          python -m pip install -e '.[test,artifact,fuseapi]'
+          pytest -q
+          ruff check .
+          ruff format --check .
+          python -m build
+          npm test --prefix packages/console-viewer
+          npm pack ./packages/console-viewer --pack-destination dist
+      - name: Generate checksums, SBOM and provenance
+        run: |
+          export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
+          echo "SOURCE_DATE_EPOCH=$SOURCE_DATE_EPOCH" >> "$GITHUB_ENV"
+          python scripts/generate_release_evidence.py \
+            --dist dist \
+            --out release-evidence \
+            --repository "$GITHUB_REPOSITORY" \
+            --commit "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID"
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            dist/*
+            release-evidence/*
+      - name: Publish immutable GitHub release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME"
+          dist/* release-evidence/*
+          --verify-tag
+          --title "Juntai Documentation Capability Bundle 1.0.0"
+          --generate-notes

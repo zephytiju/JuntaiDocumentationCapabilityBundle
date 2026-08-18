@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.juntai.io/capability/feedback/v1.schema.json",
+  "title": "CapabilityFeedbackEnvelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "feedbackId", "dedupeFingerprint", "bundleDigest", "mcpDescriptorDigest", "agent", "task", "documents", "toolOutcomes", "outcome", "evidencePointers", "privacy"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "feedbackId": {"type": "string"},
+    "dedupeFingerprint": {"$ref": "#/$defs/digest"},
+    "bundleDigest": {"$ref": "#/$defs/digest"},
+    "mcpDescriptorDigest": {"$ref": "#/$defs/digest"},
+    "agent": {"type": "object", "additionalProperties": false, "required": ["runtime", "frameworkVersion", "modelId"], "properties": {"runtime": {"type": "string"}, "frameworkVersion": {"type": "string"}, "modelId": {"type": "string"}, "modelVersion": {"type": "string"}}},
+    "task": {"type": "object", "additionalProperties": false, "required": ["taskClass"], "properties": {"taskClass": {"type": "string"}, "evaluationTaskId": {"type": "string"}, "evaluationTaskVersion": {"type": "string"}}},
+    "documents": {"type": "object", "additionalProperties": false, "required": ["retrievedUnitIds", "injectedUnitIds", "citedUnitIds"], "properties": {"retrievedUnitIds": {"$ref": "#/$defs/ids"}, "injectedUnitIds": {"$ref": "#/$defs/ids"}, "citedUnitIds": {"$ref": "#/$defs/ids"}, "inferredUsedUnitIds": {"$ref": "#/$defs/ids"}}},
+    "toolOutcomes": {"type": "array", "items": {"$ref": "https://schemas.juntai.io/capability/tool-outcome/v1.schema.json"}},
+    "outcome": {"enum": ["success", "partial", "failure", "abstained"]},
+    "failureCode": {"type": "string"},
+    "evidencePointers": {"type": "array", "items": {"$ref": "https://schemas.juntai.io/capability/evidence-pointer/v1.schema.json"}},
+    "userCorrection": {"type": "object", "additionalProperties": false, "required": ["text", "classification", "optedIn"], "properties": {"text": {"type": "string", "maxLength": 2000}, "classification": {"enum": ["public", "internal"]}, "optedIn": {"const": true}}},
+    "proposal": {"type": "object", "additionalProperties": false, "required": ["ownerDomain", "targetUnitIds", "summary"], "properties": {"ownerDomain": {"type": "string"}, "targetUnitIds": {"$ref": "#/$defs/ids"}, "summary": {"type": "string", "maxLength": 1000}}},
+    "privacy": {"type": "object", "additionalProperties": false, "required": ["filtered", "removedFields", "policyVersion"], "properties": {"filtered": {"type": "boolean"}, "removedFields": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}, "policyVersion": {"type": "string"}}}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@zephytiju/juntai-documentation-viewer",
+  "version": "1.0.0",
+  "description": "Framework-neutral standard Juntai documentation viewer components",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "pack:check": "npm pack --dry-run"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

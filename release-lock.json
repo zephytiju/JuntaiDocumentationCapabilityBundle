@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "capability.juntai.io/release-lock/v1",
+  "packageVersion": "1.0.0",
+  "contracts": {
+    "artifactSdk": "juntai-artifact-client==1.0.2",
+    "fuseApi": "juntai-fuse-api==2.0.0",
+    "fuseDescriptor": "juntai.fuse/mcp-descriptor/v1",
+    "fuseProductionProfile": "juntai.fuse.profile.mcp/v1",
+    "layoutProfile": "juntai.documentation.standard/v1",
+    "schemaMajor": 1
+  }
+}

@@ -1,0 +1,78 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "juntai-documentation-capability"
+version = "1.0.0"
+description = "Service-free deterministic documentation and MCP capability bundle foundation for Juntai"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+authors = [{ name = "Juntai Team", email = "dev@juntai.com" }]
+dependencies = [
+  "jsonschema>=4.23,<5",
+  "packaging>=24,<27",
+  "PyYAML>=6.0,<7",
+]
+
+[project.optional-dependencies]
+artifact = ["juntai-artifact-client==1.0.2"]
+fuseapi = ["juntai-fuse-api==2.0.0"]
+test = [
+  "build==1.3.0",
+  "pytest==9.0.2",
+  "ruff==0.14.14",
+]
+
+[project.scripts]
+juntai-capability = "juntai.documentation.cli:main"
+
+[project.urls]
+Repository = "https://github.com/zephytiju/JuntaiDocumentationCapabilityBundle"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/juntai"]
+
+[tool.hatch.build]
+dev-mode-dirs = ["src"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"schemas" = "juntai/documentation/schemas"
+"media-types.yaml" = "juntai/documentation/media-types.yaml"
+"compatibility.yaml" = "juntai/documentation/compatibility.yaml"
+"packages/console-viewer/dist" = "juntai/documentation/console-viewer"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+  "/schemas",
+  "/packages",
+  "/fixtures",
+  "/tests",
+  "/scripts",
+  "/media-types.yaml",
+  "/compatibility.yaml",
+  "/README.md",
+  "/RELEASING.md",
+  "/release-lock.json",
+]
+
+[tool.hatch.build.targets.sdist.force-include]
+"packages/console-viewer/dist" = "packages/console-viewer/dist"
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

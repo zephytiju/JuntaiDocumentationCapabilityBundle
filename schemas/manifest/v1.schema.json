@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.juntai.io/capability/manifest/v1.schema.json",
+  "title": "AgentDocumentationManifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "contracts", "sources", "compatibility", "publication", "provenance"],
+  "properties": {
+    "apiVersion": {"const": "capability.juntai.io/v1"},
+    "kind": {"const": "AgentCapabilityBundle"},
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bundleId", "version", "ownerKey", "producerBuildId"],
+      "properties": {
+        "bundleId": {"$ref": "#/$defs/id"},
+        "version": {"$ref": "#/$defs/semver"},
+        "ownerKey": {"$ref": "#/$defs/id"},
+        "producerBuildId": {"type": "string", "minLength": 1, "maxLength": 200}
+      }
+    },
+    "contracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["openapi", "mcp"],
+      "properties": {
+        "openapi": {"$ref": "#/$defs/exactInput"},
+        "mcp": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "digest", "descriptorDigest"],
+          "properties": {
+            "path": {"$ref": "#/$defs/relativePath"},
+            "digest": {"$ref": "#/$defs/digest"},
+            "descriptorDigest": {"$ref": "#/$defs/digest"}
+          }
+        },
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["schemaId", "path", "digest"],
+            "properties": {
+              "schemaId": {"$ref": "#/$defs/id"},
+              "path": {"$ref": "#/$defs/relativePath"},
+              "digest": {"$ref": "#/$defs/digest"}
+            }
+          },
+          "default": []
+        }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "units"],
+      "properties": {
+        "root": {"$ref": "#/$defs/relativePath"},
+        "units": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/unit"}
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "lifecycle"],
+      "properties": {
+        "platform": {"type": "string", "minLength": 1},
+        "lifecycle": {"enum": ["preview", "release", "deprecated"]},
+        "taskClasses": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true},
+        "frameworks": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "namespace", "name", "kind"],
+      "properties": {
+        "visibility": {"enum": ["public", "internal", "tenant", "restricted"]},
+        "namespace": {"$ref": "#/$defs/id"},
+        "name": {"$ref": "#/$defs/id"},
+        "kind": {"$ref": "#/$defs/id"},
+        "routeKey": {"$ref": "#/$defs/id"},
+        "applicationContributionKey": {"$ref": "#/$defs/id"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceRepository", "sourceCommit", "packagerVersion", "rendererVersions", "builtAt", "approvalEvidenceRef"],
+      "properties": {
+        "sourceRepository": {"type": "string", "minLength": 1},
+        "sourceCommit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "packagerVersion": {"$ref": "#/$defs/semver"},
+        "rendererVersions": {"type": "object", "minProperties": 2, "additionalProperties": {"$ref": "#/$defs/semver"}},
+        "builtAt": {"type": "string", "format": "date-time"},
+        "approvalEvidenceRef": {"$ref": "../evidence-pointer/v1.schema.json"}
+      }
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._/-]{1,199}$"},
+    "semver": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "relativePath": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "exactInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "digest"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "digest": {"$ref": "#/$defs/digest"},
+        "descriptorDigest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "toolRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["toolId", "mcpDescriptorDigest", "signatureSha256", "inputSchemaDigest"],
+      "properties": {
+        "toolId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+        "mcpDescriptorDigest": {"$ref": "#/$defs/digest"},
+        "signatureSha256": {"$ref": "#/$defs/digest"},
+        "inputSchemaDigest": {"$ref": "#/$defs/digest"},
+        "outputSchemaDigest": {"$ref": "#/$defs/digest"},
+        "approvalPolicyUnitId": {"$ref": "#/$defs/id"}
+      }
+    },
+    "unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unitId", "kind", "audiences", "locale", "title", "sourcePath", "lifecycle"],
+      "properties": {
+        "unitId": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["overview", "guide", "workflow", "reference", "example", "safety", "policy", "troubleshooting", "changelog", "generated-reference"]},
+        "audiences": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["human", "agent", "developer", "operator"]}},
+        "locale": {"type": "string", "pattern": "^[a-z]{2}(?:-[A-Z]{2})?$"},
+        "title": {"type": "string", "minLength": 1, "maxLength": 200},
+        "sourcePath": {"$ref": "#/$defs/relativePath"},
+        "parentUnitId": {"$ref": "#/$defs/id"},
+        "order": {"type": "integer", "minimum": 0},
+        "lifecycle": {"enum": ["preview", "release", "deprecated"]},
+        "toolReferences": {"type": "array", "items": {"$ref": "#/$defs/toolRef"}},
+        "schemaReferences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["schemaId", "digest"],
+            "properties": {"schemaId": {"$ref": "#/$defs/id"}, "digest": {"$ref": "#/$defs/digest"}}
+          }
+        },
+        "mcp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "resourceId": {"$ref": "#/$defs/id"},
+            "promptId": {"$ref": "#/$defs/id"},
+            "userInvoked": {"const": true},
+            "mimeType": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    }
+  }
+}
