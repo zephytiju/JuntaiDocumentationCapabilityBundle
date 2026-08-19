@@ -50,12 +50,17 @@ jobs:
           subject-path: |
             dist/*
             release-evidence/*
-      - name: Publish immutable GitHub release assets
+      - name: Stage immutable GitHub release assets
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh release create "$GITHUB_REF_NAME"
           dist/* release-evidence/*
+          --draft
           --verify-tag
           --title "Juntai Documentation Capability Bundle 1.0.0"
           --generate-notes
+      - name: Publish and lock immutable GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "$GITHUB_REF_NAME" --draft=false
