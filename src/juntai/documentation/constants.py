@@ -1,6 +1,6 @@
 """Versioned public constants owned by this foundation."""
 
-PACKAGE_VERSION = "1.0.0"
+PACKAGE_VERSION = "2.0.0"
 SCHEMA_VERSION = "1"
 MANIFEST_API_VERSION = "capability.juntai.io/v1"
 MANIFEST_KIND = "AgentCapabilityBundle"

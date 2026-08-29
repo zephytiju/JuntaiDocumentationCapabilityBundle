@@ -1,19 +1,54 @@
 {
   "name": "@zephytiju/juntai-documentation-viewer",
-  "version": "1.0.0",
-  "description": "Framework-neutral standard Juntai documentation viewer components",
+  "version": "2.0.0",
+  "description": "Juntai Console documentation catalog and immutable bundle viewer",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": ["./dist/styles.css"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
   },
-  "files": ["dist", "src"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md"],
+  "engines": {"node": ">=24.14.0"},
+  "packageManager": "npm@11.9.0",
   "scripts": {
-    "test": "node --test test/*.test.mjs",
-    "pack:check": "npm pack --dry-run"
+    "build": "node --import tsx tools/build.ts",
+    "check:boundary": "node --import tsx tools/check-boundary.ts",
+    "pack:check": "npm_config_cache=.tmp/npm-cache npm pack --dry-run",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.tools.json --noEmit",
+    "verify": "npm run check:boundary && npm run typecheck && npm run build && npm test && npm run pack:check"
+  },
+  "dependencies": {
+    "@zephytiju/juntai-design-system": "0.1.0",
+    "@zephytiju/juntai-typescript-sdk": "3.0.0"
+  },
+  "peerDependencies": {
+    "@zephytiju/console-sdk": "2.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.1",
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@zephytiju/console-sdk": "2.1.0",
+    "axe-core": "4.11.1",
+    "jsdom": "28.1.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tsx": "4.23.12",
+    "typescript": "5.9.3",
+    "vite": "7.3.6",
+    "vitest": "4.1.0"
   },
   "license": "SEE LICENSE IN LICENSE"
 }

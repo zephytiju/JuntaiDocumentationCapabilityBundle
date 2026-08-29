@@ -158,6 +158,7 @@ def application_documentation_link(
     *,
     contribution_key: str,
     route_key: str,
+    unit_id: str,
 ) -> dict[str, Any]:
     """Create association input only from a completed exact publication result."""
 
@@ -171,10 +172,13 @@ def application_documentation_link(
         "manifest_digest",
     }.issubset(reference):
         raise CapabilityError("application association requires an exact Artifact reference")
+    if re.fullmatch(r"[a-z0-9][a-z0-9._/-]{1,199}", unit_id) is None:
+        raise CapabilityError("application association requires a stable unitId")
     return {
         "presentationRole": "application.documentation",
         "contributionKey": contribution_key,
         "ownerKey": pin["coordinate"]["ownerKey"],
         "routeKey": route_key,
+        "unitId": unit_id,
         "pin": pin,
     }

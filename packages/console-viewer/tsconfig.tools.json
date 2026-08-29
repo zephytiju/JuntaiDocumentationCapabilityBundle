@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
+    "rootDir": ".",
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
+  },
+  "include": ["tools/**/*.ts", "tests/**/*.ts", "tests/**/*.tsx", "vitest.config.ts"]
+}

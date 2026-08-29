@@ -44,8 +44,10 @@ def test_artifact_sdk_publication_precedes_association_and_loading(built) -> Non
         result,
         contribution_key="generic.agent-capability",
         route_key="generic.documentation",
+        unit_id="fixture.overview",
     )
     assert link["pin"] == result["pin"]
+    assert link["unitId"] == "fixture.overview"
     loaded = load_capability_set(
         built.output,
         pin=result["pin"],
@@ -82,4 +84,16 @@ def test_unpublished_planned_coordinate_cannot_be_associated() -> None:
             {"coordinate": "planned"},
             contribution_key="generic.agent-capability",
             route_key="generic.documentation",
+            unit_id="fixture.overview",
+        )
+
+
+def test_application_association_requires_stable_unit_id(built) -> None:
+    result = publish_bundle(built.output, artifact_client=FakeArtifactClient())
+    with pytest.raises(CapabilityError, match="stable unitId"):
+        application_documentation_link(
+            result,
+            contribution_key="generic.agent-capability",
+            route_key="generic.documentation",
+            unit_id="../active payload",
         )

@@ -55,8 +55,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: npm test --prefix packages/console-viewer
-      - run: npm pack ./packages/console-viewer --dry-run
+          cache: npm
+          cache-dependency-path: packages/console-viewer/package-lock.json
+      - run: npm ci --prefix packages/console-viewer --ignore-scripts
+      - run: npm run verify --prefix packages/console-viewer
 
   boundary:
     name: Service-free boundary

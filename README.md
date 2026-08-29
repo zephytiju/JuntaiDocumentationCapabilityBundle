@@ -10,7 +10,8 @@ The repository contains:
 - versioned manifest, content-graph, catalog, feedback, evidence and tool-outcome schemas;
 - a deterministic resolver, validator, packager and offline renderer;
 - a pure catalog compiler/selector and framework-neutral capability loader;
-- the `juntai.documentation.standard/v1` Console viewer component package;
+- the `juntai.documentation.standard/v1` Console module with catalog, bundle,
+  and application-version pages;
 - an injected `juntai-artifact-client==1.0.2` publication adapter; and
 - privacy-safe, advisory feedback hooks with fail-closed evidence dereference.
 
@@ -21,7 +22,7 @@ private-database fallback, or automatically mutating feedback path.
 ## Install and use
 
 ```bash
-python -m pip install 'juntai-documentation-capability==1.0.0'
+python -m pip install 'juntai-documentation-capability==2.0.0'
 
 juntai-capability resolve \
   --manifest documentation/manifest.yaml \
@@ -46,6 +47,8 @@ pytest -q
 ruff check .
 ruff format --check .
 python -m build
+npm ci --prefix packages/console-viewer --ignore-scripts
+npm run verify --prefix packages/console-viewer
 ```
 
 The M4 fixture under `fixtures/valid/minimal` is deliberately generic. It is a

@@ -29,4 +29,4 @@ __all__ = [
     "verify_derived_projection",
 ]
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
