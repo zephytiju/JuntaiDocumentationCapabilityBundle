@@ -1,5 +1,5 @@
 schemaVersion: capability.juntai.io/compatibility/v1
-packageVersion: 1.0.0
+packageVersion: 2.0.0
 schemaMajor: 1
 fuseApi:
   distribution: juntai-fuse-api

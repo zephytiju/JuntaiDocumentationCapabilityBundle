@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0 — 2026-08-29
+
+- Publish a deterministic `ConsoleModule` for the signed documentation catalog, exact immutable bundle, and application-version documentation pages.
+- Route public catalog entries through the shared viewer and restricted entries through provider `routeKey` values carrying only stable scalar identifiers.
+- Consume Application Metadata only through the aggregate TypeScript SDK 3.0.0 and require the stable `unitId` association field.
+- Keep all browser delivery paths same-origin and reject Registry, OCI, Meridian, storage, credential, callback, and client authority leakage.
+
 ## 1.0.0 — 2026-08-18
 
 - Initial service-free documentation capability bundle schemas, library and CLI.

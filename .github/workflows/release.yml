@@ -24,16 +24,18 @@ jobs:
           node-version: 24
       - name: Verify exact release version
         run: |
-          test "$GITHUB_REF_NAME" = v1.0.0
-          python -c 'import tomllib; assert tomllib.load(open("pyproject.toml", "rb"))["project"]["version"] == "1.0.0"'
+          test "$GITHUB_REF_NAME" = v2.0.0
+          python -c 'import tomllib; assert tomllib.load(open("pyproject.toml", "rb"))["project"]["version"] == "2.0.0"'
+          node -e 'const value=require("./packages/console-viewer/package.json"); if(value.version!=="2.0.0") process.exit(1)'
       - name: Test and build
         run: |
+          npm ci --prefix packages/console-viewer --ignore-scripts
+          npm run verify --prefix packages/console-viewer
           python -m pip install -e '.[test,artifact,fuseapi]'
           pytest -q
           ruff check .
           ruff format --check .
           python -m build
-          npm test --prefix packages/console-viewer
           npm pack ./packages/console-viewer --pack-destination dist
       - name: Generate checksums, SBOM and provenance
         run: |
@@ -58,7 +60,7 @@ jobs:
           dist/* release-evidence/*
           --draft
           --verify-tag
-          --title "Juntai Documentation Capability Bundle 1.0.0"
+          --title "Juntai Documentation Capability Bundle 2.0.0"
           --generate-notes
       - name: Publish and lock immutable GitHub release
         env:
