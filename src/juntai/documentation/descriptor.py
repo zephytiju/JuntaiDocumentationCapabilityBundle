@@ -1,4 +1,4 @@
-"""Exact consumer for the released FuseAPI 2.0.0 MCP descriptor contract."""
+"""Exact consumer for explicitly supported FuseAPI MCP descriptor releases."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .canonical import canonical_json_bytes, digest_json, sha256_bytes
-from .constants import FUSE_API_VERSION, FUSE_DESCRIPTOR_VERSION, FUSE_MCP_PROFILE
+from .constants import FUSE_DESCRIPTOR_VERSION, FUSE_MCP_PROFILE, SUPPORTED_FUSE_API_VERSIONS
 from .errors import CapabilityError
 
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -83,16 +83,16 @@ def validate_fuseapi_descriptor_document(
     if set(descriptor) != required:
         changed_fields = sorted(set(descriptor) ^ required)
         raise CapabilityError(
-            f"MCP descriptor fields differ from FuseAPI 2.0.0: {changed_fields}",
+            f"MCP descriptor fields differ from the supported FuseAPI contract: {changed_fields}",
             code="BUNDLE_INPUT_NOT_EXACT",
         )
     if descriptor["schemaVersion"] != FUSE_DESCRIPTOR_VERSION:
         raise CapabilityError(
             "unsupported FuseAPI MCP descriptor version", code="BUNDLE_INCOMPATIBLE"
         )
-    if descriptor["fuseApiVersion"] != FUSE_API_VERSION:
+    if descriptor["fuseApiVersion"] not in SUPPORTED_FUSE_API_VERSIONS:
         raise CapabilityError(
-            f"this release consumes juntai-fuse-api=={FUSE_API_VERSION} exactly",
+            f"supported exact FuseAPI versions: {', '.join(SUPPORTED_FUSE_API_VERSIONS)}",
             code="BUNDLE_INCOMPATIBLE",
         )
     if descriptor["profile"] != FUSE_MCP_PROFILE:
@@ -120,8 +120,12 @@ def validate_fuseapi_descriptor_document(
             code="BUNDLE_INPUT_NOT_EXACT",
         )
     tools = descriptor["tools"]
-    if not isinstance(tools, list) or tools != sorted(
-        tools, key=lambda item: item.get("toolId", "")
+    if (
+        not isinstance(tools, list)
+        or any(
+            not isinstance(item, dict) or not isinstance(item.get("toolId"), str) for item in tools
+        )
+        or tools != sorted(tools, key=lambda item: item["toolId"])
     ):
         raise CapabilityError("FuseAPI tools must be a deterministically sorted list")
     if digest_json(tools) != descriptor["endpointCatalogSha256"]:
@@ -156,7 +160,7 @@ def _validate_tool(tool: object, descriptor_digest: str) -> dict[str, Any]:
         "bodyProperty",
     }
     if set(tool) != required:
-        raise CapabilityError("FuseAPI tool fields differ from the 2.0.0 descriptor contract")
+        raise CapabilityError("FuseAPI tool fields differ from the supported descriptor contract")
     tool_id = tool["toolId"]
     if not isinstance(tool_id, str) or _TOOL_ID.fullmatch(tool_id) is None:
         raise CapabilityError("invalid FuseAPI tool identity")

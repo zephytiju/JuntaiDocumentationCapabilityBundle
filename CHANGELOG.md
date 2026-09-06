@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1 — 2026-09-06
+
+- Accept genuine FuseAPI 2.1.0 descriptors while retaining exact 2.0.0 compatibility and all digest, schema, profile, Tool and OpenAPI linkage checks.
+- Exercise both released exporters without version overrides and verify real OpenAPI/MCP inputs through byte-identical bundle builds.
+- Publish a hash-pinned conformance dependency lock, clean-wheel consumer evidence, and release metadata derived from the actual package version.
+
 ## 2.0.0 — 2026-08-29
 
 - Publish a deterministic `ConsoleModule` for the signed documentation catalog, exact immutable bundle, and application-version documentation pages.

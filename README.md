@@ -2,8 +2,8 @@
 
 `juntai-documentation-capability` is the service-free foundation for producing
 immutable human documentation and MCP Resources/Prompts from one reviewed,
-versioned source graph. It validates the exact `juntai-fuse-api==2.0.0`
-production MCP descriptor and never defines or registers MCP Tools.
+versioned source graph. It validates exact production MCP descriptors from `juntai-fuse-api`
+2.0.0 and 2.1.0 (no other exporter versions) and never defines or registers MCP Tools.
 
 The repository contains:
 
@@ -22,7 +22,7 @@ private-database fallback, or automatically mutating feedback path.
 ## Install and use
 
 ```bash
-python -m pip install 'juntai-documentation-capability==2.0.0'
+python -m pip install 'https://github.com/zephytiju/JuntaiDocumentationCapabilityBundle/releases/download/v2.0.1/juntai_documentation_capability-2.0.1-py3-none-any.whl'
 
 juntai-capability resolve \
   --manifest documentation/manifest.yaml \
@@ -42,7 +42,8 @@ byte-identical JSON and tar artifacts.
 ## Development
 
 ```bash
-python -m pip install -e '.[test,fuseapi]'
+python -m pip install --require-hashes -r requirements-conformance.txt
+python -m pip install --no-deps -e .
 pytest -q
 ruff check .
 ruff format --check .

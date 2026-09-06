@@ -1,11 +1,12 @@
 """Versioned public constants owned by this foundation."""
 
-PACKAGE_VERSION = "2.0.0"
+PACKAGE_VERSION = "2.0.1"
 SCHEMA_VERSION = "1"
 MANIFEST_API_VERSION = "capability.juntai.io/v1"
 MANIFEST_KIND = "AgentCapabilityBundle"
 LAYOUT_PROFILE = "juntai.documentation.standard/v1"
-FUSE_API_VERSION = "2.0.0"
+FUSE_API_VERSION = "2.1.0"
+SUPPORTED_FUSE_API_VERSIONS = ("2.0.0", "2.1.0")
 FUSE_DESCRIPTOR_VERSION = "juntai.fuse/mcp-descriptor/v1"
 FUSE_MCP_PROFILE = "juntai.fuse.profile.mcp/v1"
 

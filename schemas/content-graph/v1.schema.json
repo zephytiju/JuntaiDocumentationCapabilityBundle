@@ -67,7 +67,7 @@
         "mcpDescriptorDigest": {"$ref": "#/$defs/digest"},
         "mcpServiceId": {"type": "string"},
         "mcpBuildId": {"type": "string"},
-        "fuseApiVersion": {"const": "2.0.0"}
+        "fuseApiVersion": {"enum": ["2.0.0", "2.1.0"]}
       }
     },
     "provenance": {"type": "object"}
