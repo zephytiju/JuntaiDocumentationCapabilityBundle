@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -36,6 +37,12 @@ def main() -> int:
     parser.add_argument("--commit", required=True)
     parser.add_argument("--run-id", required=True)
     args = parser.parse_args()
+    root = Path(__file__).resolve().parents[1]
+    project = tomllib.loads((root / "pyproject.toml").read_text())["project"]
+    release_version = project["version"]
+    release_lock = json.loads((root / "release-lock.json").read_text())
+    if release_lock["packageVersion"] != release_version:
+        raise SystemExit("release lock and package versions differ")
 
     dist = Path(args.dist)
     output = Path(args.out)
@@ -60,13 +67,13 @@ def main() -> int:
         ),
         "creationInfo": {
             "created": created_at(),
-            "creators": ["Tool: JuntaiDocumentationCapabilityBundle-1.0.0"],
+            "creators": [f"Tool: JuntaiDocumentationCapabilityBundle-{release_version}"],
         },
         "packages": [
             {
                 "name": item["name"],
                 "SPDXID": f"SPDXRef-Package-{index}",
-                "versionInfo": "1.0.0",
+                "versionInfo": release_version,
                 "downloadLocation": "NOASSERTION",
                 "filesAnalyzed": False,
                 "checksums": [{"algorithm": "SHA256", "checksumValue": item["digest"]["sha256"]}],
@@ -85,13 +92,17 @@ def main() -> int:
         "predicate": {
             "buildDefinition": {
                 "buildType": "https://github.com/zephytiju/JuntaiDocumentationCapabilityBundle/.github/workflows/release.yml@refs/heads/main",
-                "externalParameters": {"version": "1.0.0"},
+                "externalParameters": {"version": release_version},
                 "internalParameters": {},
                 "resolvedDependencies": [
                     {
                         "uri": f"git+https://github.com/{args.repository}@{args.commit}",
                         "digest": {"gitCommit": args.commit},
-                    }
+                    },
+                    {
+                        "uri": "requirements-conformance.txt",
+                        "digest": {"sha256": digest(root / "requirements-conformance.txt")},
+                    },
                 ],
             },
             "runDetails": {
@@ -108,8 +119,10 @@ def main() -> int:
         "schemaVersion": "capability.juntai.io/foundation-release/v1",
         "repository": args.repository,
         "sourceCommit": args.commit,
-        "version": "1.0.0",
-        "fuseApiVersion": "2.0.0",
+        "version": release_version,
+        "fuseApiVersion": release_lock["contracts"]["fuseApi"].split("==")[1],
+        "supportedFuseApiVersions": release_lock["contracts"]["supportedFuseApiVersions"],
+        "dependencyLockSha256": digest(root / "requirements-conformance.txt"),
         "artifactSdkVersion": "1.0.2",
         "artifacts": subjects,
     }
