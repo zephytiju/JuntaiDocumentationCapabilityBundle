@@ -24,9 +24,9 @@ jobs:
           node-version: 24
       - name: Verify exact release version
         run: |
-          test "$GITHUB_REF_NAME" = v2.0.1
-          python -c 'import tomllib; assert tomllib.load(open("pyproject.toml", "rb"))["project"]["version"] == "2.0.1"'
-          node -e 'const value=require("./packages/console-viewer/package.json"); if(value.version!=="2.0.1") process.exit(1)'
+          test "$GITHUB_REF_NAME" = v2.0.2
+          python -c 'import tomllib; assert tomllib.load(open("pyproject.toml", "rb"))["project"]["version"] == "2.0.2"'
+          node -e 'const value=require("./packages/console-viewer/package.json"); if(value.version!=="2.0.2") process.exit(1)'
       - name: Test and build
         run: |
           npm ci --prefix packages/console-viewer --ignore-scripts
@@ -71,7 +71,7 @@ jobs:
           dist/* release-evidence/*
           --draft
           --verify-tag
-          --title "Juntai Documentation Capability Bundle 2.0.1"
+          --title "Juntai Documentation Capability Bundle 2.0.2"
           --generate-notes
       - name: Publish and lock immutable GitHub release
         env:

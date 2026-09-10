@@ -8,14 +8,14 @@ export declare const documentationViewerContribution: {
 };
 export declare const documentationModule: {
     readonly id: "juntai-documentation-viewer";
-    readonly version: "2.0.0";
+    readonly version: "2.0.2";
     readonly owner: {
         readonly team: "data-intel-platform";
         readonly repository: "zephytiju/JuntaiDocumentationCapabilityBundle";
     };
     readonly compatibility: {
         readonly console: "^1.0.0";
-        readonly sdk: ">=2.1.0 <=2.1.0";
+        readonly sdk: ">=2.1.0 <=2.2.0";
         readonly react: "^19.0.0";
         readonly typescriptSdk: ">=3.0.0 <=3.0.0";
     };
