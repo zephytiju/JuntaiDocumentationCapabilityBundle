@@ -49,8 +49,8 @@ for (const [name, version] of Object.entries({
 })) {
   if (packageJson.dependencies?.[name] !== version) failures.push(`${name} must be pinned to ${version}`);
 }
-if (packageJson.peerDependencies?.["@zephytiju/console-sdk"] !== "2.1.0") {
-  failures.push("@zephytiju/console-sdk must be pinned to 2.1.0");
+if (packageJson.peerDependencies?.["@zephytiju/console-sdk"] !== ">=2.1.0 <=2.2.0") {
+  failures.push("@zephytiju/console-sdk must retain the bounded range >=2.1.0 <=2.2.0");
 }
 if (failures.length) throw new Error(`Boundary verification failed:\n${failures.join("\n")}`);
 console.log("Documentation Console boundary verified.");

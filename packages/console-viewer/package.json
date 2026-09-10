@@ -1,9 +1,11 @@
 {
   "name": "@zephytiju/juntai-documentation-viewer",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Juntai Console documentation catalog and immutable bundle viewer",
   "type": "module",
-  "sideEffects": ["./dist/styles.css"],
+  "sideEffects": [
+    "./dist/styles.css"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -14,8 +16,13 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "README.md"],
-  "engines": {"node": ">=24.14.0"},
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=24.14.0"
+  },
   "packageManager": "npm@11.9.0",
   "scripts": {
     "build": "node --import tsx tools/build.ts",
@@ -30,7 +37,7 @@
     "@zephytiju/juntai-typescript-sdk": "3.0.0"
   },
   "peerDependencies": {
-    "@zephytiju/console-sdk": "2.1.0",
+    "@zephytiju/console-sdk": ">=2.1.0 <=2.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -40,7 +47,7 @@
     "@types/node": "24.13.3",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@zephytiju/console-sdk": "2.1.0",
+    "@zephytiju/console-sdk": "2.2.0",
     "axe-core": "4.11.1",
     "jsdom": "28.1.0",
     "react": "19.2.4",

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "juntai-documentation-capability"
-version = "2.0.1"
+version = "2.0.2"
 description = "Service-free deterministic documentation and MCP capability bundle foundation for Juntai"
 readme = "README.md"
 requires-python = ">=3.11"

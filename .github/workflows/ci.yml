@@ -61,6 +61,10 @@ jobs:
 
   console-viewer:
     name: Console viewer
+    strategy:
+      fail-fast: false
+      matrix:
+        console-sdk: ["2.1.0", "2.2.0"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -70,6 +74,9 @@ jobs:
           cache: npm
           cache-dependency-path: packages/console-viewer/package-lock.json
       - run: npm ci --prefix packages/console-viewer --ignore-scripts
+      - name: Install compatibility endpoint
+        if: matrix.console-sdk != '2.2.0'
+        run: npm install --prefix packages/console-viewer --ignore-scripts --no-save --package-lock=false @zephytiju/console-sdk@${{ matrix.console-sdk }}
       - run: npm run verify --prefix packages/console-viewer
 
   boundary:
