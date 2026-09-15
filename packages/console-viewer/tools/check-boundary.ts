@@ -45,7 +45,7 @@ const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "
 };
 for (const [name, version] of Object.entries({
   "@zephytiju/juntai-design-system": "0.1.0",
-  "@zephytiju/juntai-typescript-sdk": "3.0.0",
+  "@zephytiju/juntai-typescript-sdk": "3.10.0",
 })) {
   if (packageJson.dependencies?.[name] !== version) failures.push(`${name} must be pinned to ${version}`);
 }
