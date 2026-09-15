@@ -8,7 +8,7 @@ export declare const documentationViewerContribution: {
 };
 export declare const documentationModule: {
     readonly id: "juntai-documentation-viewer";
-    readonly version: "2.0.2";
+    readonly version: "2.0.3-local.prism-sdk.0";
     readonly owner: {
         readonly team: "data-intel-platform";
         readonly repository: "zephytiju/JuntaiDocumentationCapabilityBundle";
@@ -17,7 +17,7 @@ export declare const documentationModule: {
         readonly console: "^1.0.0";
         readonly sdk: ">=2.1.0 <=2.2.0";
         readonly react: "^19.0.0";
-        readonly typescriptSdk: ">=3.0.0 <=3.0.0";
+        readonly typescriptSdk: ">=3.9.0-local.prism-preview.0 <=3.9.0-local.prism-preview.0";
     };
     readonly contributions: {
         readonly documentationViewerContributions: readonly [{

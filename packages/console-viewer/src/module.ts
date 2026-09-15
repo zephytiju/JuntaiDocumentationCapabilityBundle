@@ -60,7 +60,7 @@ const documentationService = defineService({
 
 export const documentationModule = defineConsoleModule({
   id: DOCUMENTATION_MODULE_ID,
-  version: "2.0.2",
+  version: "2.0.3-local.prism-sdk.0",
   owner: {
     team: "data-intel-platform",
     repository: "zephytiju/JuntaiDocumentationCapabilityBundle",
@@ -69,7 +69,7 @@ export const documentationModule = defineConsoleModule({
     console: "^1.0.0",
     sdk: ">=2.1.0 <=2.2.0",
     react: "^19.0.0",
-    typescriptSdk: ">=3.0.0 <=3.0.0",
+    typescriptSdk: ">=3.9.0-local.prism-preview.0 <=3.9.0-local.prism-preview.0",
   },
   contributions: {
     documentationViewerContributions: [documentationViewerContribution],

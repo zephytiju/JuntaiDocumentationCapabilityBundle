@@ -1,6 +1,6 @@
 {
   "name": "@zephytiju/juntai-documentation-viewer",
-  "version": "2.0.2",
+  "version": "2.0.3-local.prism-sdk.0",
   "description": "Juntai Console documentation catalog and immutable bundle viewer",
   "type": "module",
   "sideEffects": [
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@zephytiju/juntai-design-system": "0.1.0",
-    "@zephytiju/juntai-typescript-sdk": "3.0.0"
+    "@zephytiju/juntai-typescript-sdk": "3.9.0-local.prism-preview.0"
   },
   "peerDependencies": {
     "@zephytiju/console-sdk": ">=2.1.0 <=2.2.0",
