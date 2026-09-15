@@ -52,7 +52,7 @@ const documentationService = defineService({
 });
 export const documentationModule = defineConsoleModule({
     id: DOCUMENTATION_MODULE_ID,
-    version: "2.0.3-local.prism-sdk.0",
+    version: "2.0.3-local.prism-sdk.1",
     owner: {
         team: "data-intel-platform",
         repository: "zephytiju/JuntaiDocumentationCapabilityBundle",

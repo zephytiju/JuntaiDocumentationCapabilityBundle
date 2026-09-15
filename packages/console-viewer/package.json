@@ -1,6 +1,6 @@
 {
   "name": "@zephytiju/juntai-documentation-viewer",
-  "version": "2.0.3-local.prism-sdk.0",
+  "version": "2.0.3-local.prism-sdk.1",
   "description": "Juntai Console documentation catalog and immutable bundle viewer",
   "type": "module",
   "sideEffects": [
