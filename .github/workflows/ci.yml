@@ -26,6 +26,9 @@ jobs:
       - name: Install exact conformance dependencies
         run: |
           python -m pip install --require-hashes -r requirements-conformance.txt
+          if [ '${{ matrix.python }}' != '3.11' ]; then
+            python -m pip install --require-hashes --no-deps -r requirements-meridian.txt
+          fi
           python -m pip install --no-deps -e .
           if [ '${{ matrix.fuseapi }}' = '2.0.0' ]; then
             python -m pip install 'juntai-fuse-api==2.0.0'
@@ -91,10 +94,47 @@ jobs:
           ! find . -path './.git' -prune -o \( -iname '*deployment*.yaml' -o -iname '*deployment*.yml' \) -print | grep .
           ! grep -R -E 'FastAPI\(|uvicorn\.run|private_database|runtime tool registry' src packages
 
+  meridian:
+    name: Real Meridian publication
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5
+        env:
+          POSTGRES_USER: meridian
+          POSTGRES_PASSWORD: meridian-fixture-only
+          POSTGRES_DB: meridian
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U meridian"
+          --health-interval 1s --health-timeout 5s --health-retries 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install exact released storage contracts and candidate
+        run: |
+          python -m pip install --require-hashes -r requirements-meridian-integration.txt
+          python -m pip install --no-deps -e .
+          python -m pip check
+      - name: Start unchanged official MinIO binary
+        run: python scripts/start_test_minio.py
+      - name: Require publication and fresh runtime read
+        env:
+          DOCUMENTATION_REAL_STORAGE: "1"
+          MERIDIAN_TEST_PG_PORT: "5432"
+        run: |
+          export MERIDIAN_TEST_S3_ENDPOINT="$NOUS_TEST_S3_ENDPOINT"
+          pytest -q tests/test_meridian_storage.py
+      - name: Remove isolated MinIO fixture
+        if: always()
+        run: python scripts/start_test_minio.py --stop
+
   required:
     name: Required CI
     if: always()
-    needs: [python, console-viewer, boundary]
+    needs: [python, console-viewer, boundary, meridian]
     runs-on: ubuntu-latest
     steps:
       - name: Require all jobs
@@ -102,3 +142,4 @@ jobs:
           test '${{ needs.python.result }}' = success
           test '${{ needs.console-viewer.result }}' = success
           test '${{ needs.boundary.result }}' = success
+          test '${{ needs.meridian.result }}' = success

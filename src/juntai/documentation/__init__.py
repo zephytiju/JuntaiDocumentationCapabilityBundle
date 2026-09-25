@@ -9,6 +9,7 @@ from .feedback import (
     privacy_filter_feedback,
 )
 from .loader import load_capability_set, verify_derived_projection
+from .meridian import load_capability_set_meridian, publish_bundle_meridian
 from .packager import build_bundle, resolve_manifest, validate_lock
 from .publication import publish_bundle
 
@@ -19,8 +20,10 @@ __all__ = [
     "canonicalize_feedback",
     "compile_catalog",
     "load_capability_set",
+    "load_capability_set_meridian",
     "privacy_filter_feedback",
     "publish_bundle",
+    "publish_bundle_meridian",
     "resolve_manifest",
     "select_capability",
     "validate_fuseapi_descriptor",
@@ -29,4 +32,4 @@ __all__ = [
     "verify_derived_projection",
 ]
 
-__version__ = "2.0.1"
+__version__ = "2.1.0"

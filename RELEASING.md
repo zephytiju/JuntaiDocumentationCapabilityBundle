@@ -1,6 +1,6 @@
 # Releasing
 
-Version `2.0.1` publishes two installable packages from the same reviewed
+Version `2.1.0` publishes two installable packages from the same reviewed
 commit:
 
 - Python distribution `juntai-documentation-capability` with the
@@ -8,7 +8,7 @@ commit:
 - npm tarball `@zephytiju/juntai-documentation-viewer` with the standard
   Console module, standard viewer pages, and TypeScript contracts.
 
-The canonical publication channel is the immutable `v2.0.1` GitHub
+The canonical publication channel is the immutable `v2.1.0` GitHub
 release in `zephytiju/JuntaiDocumentationCapabilityBundle`. Release CI rebuilds
 from the tag, reruns all conformance tests, records SHA-256 checksums, an SPDX
 SBOM and in-toto/SLSA provenance, and creates GitHub build attestations. Release
@@ -42,3 +42,10 @@ Capability payload publication is separate from foundation package release.
 Backend producers inject `juntai-artifact-client==1.0.2`; payload bytes go
 directly from that SDK to OCI and only generic metadata goes to Artifact
 Registry. Browser and CLI code never receive OCI or Registry credentials.
+
+Version 2.1.0 adds optional Meridian ResourceStore publication and exact reading.
+Python 3.12/3.13 CI installs `requirements-meridian.txt`; Python 3.11 retains
+the legacy API. Required real-storage CI publishes, repeats identical input,
+closes the runtime, and reads through a fresh runtime using PostgreSQL and the
+unchanged SHA-256-pinned official MinIO release binary. `requirements-meridian-integration.txt`
+locks this deployment-owned test closure. No Meridian package is changed.

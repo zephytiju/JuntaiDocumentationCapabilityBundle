@@ -9,6 +9,7 @@ from typing import Any
 
 from .canonical import deterministic_tar, digest_json, sha256_bytes
 from .errors import CapabilityError
+from .meridian import REFERENCE_SCHEMA, validate_directory
 from .schema_validation import validate_schema
 
 
@@ -47,13 +48,15 @@ def load_capability_set(
     if set(pin) != required_pin:
         raise CapabilityError("CapabilityBundlePin is incomplete", code="BUNDLE_INPUT_NOT_EXACT")
     reference = pin["coordinate"].get("artifactRef")
-    if not isinstance(reference, Mapping) or not {
+    if isinstance(reference, Mapping) and reference.get("schemaVersion") == REFERENCE_SCHEMA:
+        validate_directory(root, pin)
+    elif not isinstance(reference, Mapping) or not {
         "artifact_id",
         "version_id",
         "manifest_digest",
     }.issubset(reference):
         raise CapabilityError("pin does not contain an exact Artifact SDK reference")
-    if reference["manifest_digest"] != pin["coordinate"]["digest"]:
+    elif reference["manifest_digest"] != pin["coordinate"]["digest"]:
         raise CapabilityError("pin coordinate and Artifact reference digests differ")
     exact_runtime = {
         "producerBuildId": runtime_build_id,
