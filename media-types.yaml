@@ -1,5 +1,6 @@
 schemaVersion: capability.juntai.io/media-types/v1
 artifacts:
+  meridianBuild: application/vnd.juntai.capability-build.v1+tar
   canonicalBundle: application/vnd.juntai.capability-bundle.v1+tar
   agentCapabilityBundle: application/vnd.juntai.agent-capability-bundle.v1+tar
   humanProjection: application/vnd.juntai.documentation-human.v1+tar

@@ -1,7 +1,9 @@
 {
   "schemaVersion": "capability.juntai.io/release-lock/v1",
-  "packageVersion": "2.0.2",
+  "packageVersion": "2.1.0",
   "contracts": {
+    "meridianArtifact": "meridian-plugin-config-artifact==1.1.1",
+    "meridianReference": "capability.juntai.io/meridian-artifact-reference/v1",
     "artifactSdk": "juntai-artifact-client==1.0.2",
     "fuseApi": "juntai-fuse-api==2.1.0",
     "supportedFuseApiVersions": ["2.0.0", "2.1.0"],

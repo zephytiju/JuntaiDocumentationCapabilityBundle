@@ -1,0 +1,7 @@
+# Install after requirements-conformance.txt, on Python 3.12+.
+# Exact released public contracts used by the optional publication adapter.
+meridian-plugin-config-artifact==1.1.1 --hash=sha256:ccb6735b6cb8744864de21d25d6e206cf0879386bf16526871f9d85d3103c3fd
+meridian-storage-core==1.2.0 --hash=sha256:22e3cd77fa39972a8686e5c25f6dd469ad6a303261ab32c298c0ac12bdac6034
+meridian-storage-object-common==1.0.3 --hash=sha256:089012bebb00870a38b615e41c907454d418e7ddaffaf3d0f13db8bf1ea3e4a1
+meridian-storage-query==1.0.3 --hash=sha256:615035e5d50fd6b1cb6bbdc042eaca2c07cf7f2cc5fe0db68a2c66dd7e36455b
+meridian-storage-semantics==2.1.0 --hash=sha256:d3ccf4903a6422b60a05e34732695c9a60f3fb57da99b70f81a2bda2f867bf4f

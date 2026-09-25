@@ -10,6 +10,7 @@ from typing import Any, Protocol
 
 from .canonical import canonical_json_bytes, sha256_bytes
 from .errors import CapabilityError
+from .meridian import REFERENCE_SCHEMA, exact_reference
 
 
 class ArtifactClientPort(Protocol):
@@ -166,7 +167,9 @@ def application_documentation_link(
     if not isinstance(pin, Mapping):
         raise CapabilityError("publish-before-associate requires a publication result")
     reference = pin.get("coordinate", {}).get("artifactRef")
-    if not isinstance(reference, Mapping) or not {
+    if isinstance(reference, Mapping) and reference.get("schemaVersion") == REFERENCE_SCHEMA:
+        exact_reference(pin["coordinate"])
+    elif not isinstance(reference, Mapping) or not {
         "artifact_id",
         "version_id",
         "manifest_digest",
