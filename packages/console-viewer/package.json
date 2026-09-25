@@ -1,6 +1,6 @@
 {
   "name": "@zephytiju/juntai-documentation-viewer",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Juntai Console documentation catalog and immutable bundle viewer",
   "type": "module",
   "sideEffects": [

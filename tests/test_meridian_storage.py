@@ -41,6 +41,7 @@ def test_committed_publication_idempotency_and_fresh_runtime_read(built):
                 )
     finally:
         runtime.close()
+
     runtime = compose(schema_namespace=schema)
     try:
         with runtime.context(context):
@@ -54,5 +55,61 @@ def test_committed_publication_idempotency_and_fresh_runtime_read(built):
             )
             assert loaded["pin"] == pin
             assert {tool["toolId"] for tool in loaded["tools"]} == {"fixture.echo"}
+    finally:
+        runtime.close()
+
+
+def test_released_lattice_openapi_publication_and_fresh_runtime_read():
+    from test_openapi import LATTICE, metadata
+
+    from juntai.documentation.openapi_bundle import (
+        build_openapi_bundle,
+        load_openapi_bundle_meridian,
+        publish_openapi_bundle_meridian,
+        validate_openapi_bindings,
+    )
+
+    schema = "openapi_" + uuid.uuid4().hex[:12]
+    context = OperationContext(
+        "openapi-fixture",
+        tenant="fixture",
+        scope={"tenant": "fixture", "application": "documentation"},
+    )
+    runtime = compose(schema_namespace=schema)
+    try:
+        with runtime.context(context):
+            publication = publish_openapi_bundle_meridian(
+                build_openapi_bundle(LATTICE.read_bytes(), metadata=metadata()),
+                resource_store=ResourceStore(runtime),
+                namespace="lattice",
+                kind="capability",
+                name="ontology",
+                actor="build/fixture",
+            )
+    finally:
+        runtime.close()
+    runtime = compose(schema_namespace=schema)
+    try:
+        with runtime.context(context):
+            pin = publication["pin"]
+            loaded = load_openapi_bundle_meridian(resource_store=ResourceStore(runtime), pin=pin)
+            capability = {
+                "contractVersion": "v2",
+                "bundlePins": [pin],
+                "descriptorPins": [
+                    {"protocol": "openapi", "serviceId": "lattice", "digest": pin["openapiDigest"]}
+                ],
+                "openapiBindings": [loaded["openapiBinding"]],
+                "exactTools": loaded["tools"],
+                "maximumToolBoundary": [],
+            }
+            assert (
+                len(
+                    validate_openapi_bindings(
+                        capability, {pin["openapiDigest"]: LATTICE.read_bytes()}
+                    )
+                )
+                == 4
+            )
     finally:
         runtime.close()
