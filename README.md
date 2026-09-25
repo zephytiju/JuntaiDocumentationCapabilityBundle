@@ -102,3 +102,41 @@ incomplete archives, and mismatched build/runtime lineage. Directory consumers
 also verify the complete archive digest. Legacy Artifact SDK publication and
 references retain their existing API; older consumers must upgrade before using
 Meridian references. Python 3.11 supports the legacy API only.
+
+### Exact HTTP capabilities (v2)
+
+`build_openapi_bundle(openapi_bytes, metadata=...)` builds the separate
+`capability.juntai.io/openapi-bundle/v2` contract. It preserves the original
+OpenAPI 3.1.0 bytes, including whitespace. Metadata binds `ownerKey`, `bundleId`,
+`version`, `producerBuildId`, `serviceId`, `source`, `units`, and `selections`.
+`source` contains the HTTPS repository, full source commit, release artifact
+SHA-256 and descriptor path within that artifact. The caller verifies the release
+signature before building; these fields bind provenance but do not authenticate it.
+
+Each selection contains `operationId`, `approvalPolicyUnitId` (nullable for reads),
+and `idempotency` (`read` for GET, `keyed` or `none` for mutations). Mutation tools
+require a nonempty approval reference to an included `policy` or `safety` unit.
+Units contain `unitId`, `kind`, and nonempty `content`; supported kinds are
+`document`, `workflow`, `evaluation`, `policy`, and `safety`.
+
+`compile_openapi_tools` derives exact method/path/operation and input/output schema
+pins. The HTTP argument envelope contains `pathParameters`, optional `query`, and
+optional `body`. Only scalar path/query parameters, JSON bodies, and one successful
+JSON response are supported. Local component schema references are resolved into
+self-contained schemas, including recursive definitions. Duplicate operation IDs,
+remote/unresolved references, unsupported serialization, and ambiguous responses
+fail closed. Host authentication is outside model-controlled arguments.
+
+`publish_openapi_bundle_meridian` publishes one deterministic archive containing
+`bundle.json` and unchanged `openapi.json`, requires object and metadata commit,
+and reads the exact object back before returning its v2 pin. The coordinate uses
+`schemaMajor: 2`; the pin binds service, source, manifest, and OpenAPI digests.
+`load_openapi_bundle_meridian` independently recompiles the tools on read.
+`validate_openapi_bindings` lets Delivery consumers recheck the complete binding
+without storage access, reconstructing the archive digest from its exact inputs.
+No v1 MCP descriptor or projection is fabricated. Existing v1 APIs remain strict.
+
+Tests include unchanged Lattice 0.7.0 bytes. Their synthetic source commit and
+signing context are explicitly offline fixtures, not release or live admission
+evidence. Required real-storage CI publishes and reloads the same document through
+a fresh Meridian runtime.

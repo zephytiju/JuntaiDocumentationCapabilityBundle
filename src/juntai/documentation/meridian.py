@@ -53,7 +53,7 @@ def _types():
     return ResourceIdentity, StoredResourceRef
 
 
-def exact_reference(coordinate: Mapping[str, Any]):
+def exact_reference(coordinate: Mapping[str, Any], *, schema_major: int = 1):
     """Validate the discriminator, public reference, profile, and exact digest."""
     _, reference_type = _types()
     try:
@@ -66,7 +66,7 @@ def exact_reference(coordinate: Mapping[str, Any]):
             "artifactRef",
         }:
             raise ValueError("unexpected coordinate fields")
-        if coordinate["schemaMajor"] != 1:
+        if type(coordinate["schemaMajor"]) is not int or coordinate["schemaMajor"] != schema_major:
             raise ValueError("unsupported coordinate schema")
         ref = coordinate["artifactRef"]
         if set(ref) != {"schemaVersion", "resource", "digest"}:
@@ -155,8 +155,10 @@ def validate_directory(output: str | Path, pin: Mapping[str, Any]) -> None:
         raise CapabilityError("pin differs from the published build lineage")
 
 
-def _read_exact(store: Any, coordinate: Mapping[str, Any], media_type: str) -> bytes:
-    reference = exact_reference(coordinate)
+def _read_exact(
+    store: Any, coordinate: Mapping[str, Any], media_type: str, *, schema_major: int = 1
+) -> bytes:
+    reference = exact_reference(coordinate, schema_major=schema_major)
     resolved = store.artifacts.exact(reference.identity)
     resource = resolved.resource
     if (

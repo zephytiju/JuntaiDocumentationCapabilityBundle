@@ -49,3 +49,8 @@ the legacy API. Required real-storage CI publishes, repeats identical input,
 closes the runtime, and reads through a fresh runtime using PostgreSQL and the
 unchanged SHA-256-pinned official MinIO release binary. `requirements-meridian-integration.txt`
 locks this deployment-owned test closure. No Meridian package is changed.
+
+Version 2.2.0 adds the separately discriminated OpenAPI v2 capability contract.
+The Python and Console package versions advance together; Console behavior and
+legacy MCP contracts are unchanged. Required real Meridian publication CI now
+also tests the exact Lattice 0.7.0 OpenAPI document and fresh-runtime readback.
